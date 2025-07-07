@@ -13,10 +13,13 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState('home');
   const [currentStep, setCurrentStep] = useState<'upload' | 'analysis' | 'pass'>('upload');
   const [receiptData, setReceiptData] = useState(null);
+  const [scannedReceipts, setScannedReceipts] = useState<any[]>([]);
 
   const handleReceiptAnalyzed = (data: any) => {
     setReceiptData(data);
     setCurrentStep('analysis');
+    // Add to scanned receipts for dashboard
+    setScannedReceipts(prev => [data, ...prev]);
   };
 
   const handleCreatePass = () => {
@@ -26,7 +29,7 @@ const Index = () => {
   const renderPageContent = () => {
     switch (currentPage) {
       case 'home':
-        return <HomeDashboard onPageChange={setCurrentPage} />;
+        return <HomeDashboard onPageChange={setCurrentPage} recentReceipts={scannedReceipts} />;
       
       case 'capture':
         return (
@@ -58,7 +61,7 @@ const Index = () => {
         return <ReceiptHistory />;
       
       default:
-        return <HomeDashboard onPageChange={setCurrentPage} />;
+        return <HomeDashboard onPageChange={setCurrentPage} recentReceipts={scannedReceipts} />;
     }
   };
 

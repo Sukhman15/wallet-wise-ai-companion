@@ -5,9 +5,27 @@ import { Button } from '@/components/ui/button';
 
 interface HomeDashboardProps {
   onPageChange: (page: string) => void;
+  recentReceipts?: any[];
 }
 
-export const HomeDashboard = ({ onPageChange }: HomeDashboardProps) => {
+export const HomeDashboard = ({ onPageChange, recentReceipts = [] }: HomeDashboardProps) => {
+  const defaultActivity = [
+    { name: 'Whole Foods Market', date: '2024-01-15', amount: '₹7,343.95', category: 'Groceries' },
+    { name: 'Starbucks', date: '2024-01-14', amount: '₹1,070.75', category: 'Coffee & Dining' },
+    { name: 'Shell Gas Station', date: '2024-01-13', amount: '₹3,795.20', category: 'Transportation' }
+  ];
+
+  // Combine new receipts with default activity
+  const recentActivity = [
+    ...recentReceipts.map(receipt => ({
+      name: receipt.merchant,
+      date: receipt.date,
+      amount: `₹${receipt.total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+      category: receipt.items?.[0]?.category || 'General'
+    })),
+    ...defaultActivity
+  ].slice(0, 5); // Keep only latest 5
+
   const stats = [
     {
       title: 'This Month',
@@ -29,7 +47,7 @@ export const HomeDashboard = ({ onPageChange }: HomeDashboardProps) => {
     },
     {
       title: 'Receipts',
-      value: '3',
+      value: (3 + recentReceipts.length).toString(),
       description: 'This month',
       icon: Receipt,
       color: 'text-yellow-600',
@@ -45,12 +63,6 @@ export const HomeDashboard = ({ onPageChange }: HomeDashboardProps) => {
       bgColor: 'bg-gradient-to-br from-red-50 to-red-100',
       iconBg: 'bg-red-500'
     }
-  ];
-
-  const recentActivity = [
-    { name: 'Whole Foods Market', date: '2024-01-15', amount: '₹7,343.95', category: 'Groceries' },
-    { name: 'Starbucks', date: '2024-01-14', amount: '₹1,070.75', category: 'Coffee & Dining' },
-    { name: 'Shell Gas Station', date: '2024-01-13', amount: '₹3,795.20', category: 'Transportation' }
   ];
 
   return (
