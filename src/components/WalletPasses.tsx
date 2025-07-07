@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { CreditCard, AlertTriangle, ShoppingList, Plus } from 'lucide-react';
+import { CreditCard, AlertTriangle, ShoppingCart, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -27,7 +27,7 @@ export const WalletPasses = () => {
       date: '2024-01-14',
       status: 'active',
       color: 'bg-yellow-50 border-yellow-200',
-      icon: ShoppingList,
+      icon: ShoppingCart,
       iconColor: 'text-yellow-600',
       category: 'Shopping'
     }

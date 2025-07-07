@@ -1,5 +1,5 @@
 
-import { TrendingUp, DollarSign, Receipt, CreditCard } from 'lucide-react';
+import { TrendingUp, DollarSign, Receipt, CreditCard, Camera } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
