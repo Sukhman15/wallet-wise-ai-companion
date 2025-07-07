@@ -1,5 +1,4 @@
-
-import { TrendingUp, DollarSign, Receipt, CreditCard, Camera } from 'lucide-react';
+import { TrendingUp, DollarSign, Receipt, CreditCard, Camera, Shield } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -55,13 +54,13 @@ export const HomeDashboard = ({ onPageChange, recentReceipts = [] }: HomeDashboa
       iconBg: 'bg-yellow-500'
     },
     {
-      title: 'Passes',
-      value: '2',
-      description: 'Active',
-      icon: CreditCard,
-      color: 'text-red-600',
-      bgColor: 'bg-gradient-to-br from-red-50 to-red-100',
-      iconBg: 'bg-red-500'
+      title: 'Protected',
+      value: '100%',
+      description: 'Encrypted data',
+      icon: Shield,
+      color: 'text-purple-600',
+      bgColor: 'bg-gradient-to-br from-purple-50 to-purple-100',
+      iconBg: 'bg-purple-500'
     }
   ];
 
@@ -81,11 +80,11 @@ export const HomeDashboard = ({ onPageChange, recentReceipts = [] }: HomeDashboa
               </div>
               <div>
                 <h1 className="text-4xl font-bold mb-1">Project Raseed</h1>
-                <p className="text-xl text-blue-100">AI-Powered Receipt Manager</p>
+                <p className="text-xl text-blue-100">AI-Powered Receipt Manager with Advanced Privacy</p>
               </div>
             </div>
             <p className="text-blue-100 mb-8 text-lg leading-relaxed">
-              Digitize receipts, analyze spending patterns, and get intelligent financial insights directly in your Google Wallet with advanced AI technology.
+              Smart refill detection, Gmail integration, AI financial reports, and zero-knowledge encryption for complete financial privacy.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button 
