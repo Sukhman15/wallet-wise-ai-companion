@@ -8,7 +8,6 @@ import { WalletPassPreview } from '@/components/WalletPassPreview';
 import { AIChatbot } from '@/components/AIChatbot';
 import { WalletPasses } from '@/components/WalletPasses';
 import { ReceiptHistory } from '@/components/ReceiptHistory';
-import { AdvancedFeatures } from '@/components/AdvancedFeatures';
 
 const Index = () => {
   const [currentPage, setCurrentPage] = useState('home');
@@ -60,9 +59,6 @@ const Index = () => {
       
       case 'history':
         return <ReceiptHistory />;
-      
-      case 'features':
-        return <AdvancedFeatures />;
       
       default:
         return <HomeDashboard onPageChange={setCurrentPage} recentReceipts={scannedReceipts} />;
