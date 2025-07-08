@@ -1,16 +1,15 @@
 
 import React, { useState } from 'react';
-import { Mail, FileText, Shield, Zap, Network } from 'lucide-react';
+import { Mail, FileText, Shield } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { EmailReceiptLinker } from './EmailReceiptLinker';
 import { FinancialHealthReport } from './FinancialHealthReport';
 import { PrivacyEncryption } from './PrivacyEncryption';
-import { TechStackFlowchart } from './TechStackFlowchart';
 
 interface AdvancedFeaturesProps {
-  activeFeature: 'email' | 'reports' | 'privacy' | 'techstack';
-  onFeatureChange: (feature: 'email' | 'reports' | 'privacy' | 'techstack') => void;
+  activeFeature: 'email' | 'reports' | 'privacy';
+  onFeatureChange: (feature: 'email' | 'reports' | 'privacy') => void;
 }
 
 export const AdvancedFeatures = ({ activeFeature, onFeatureChange }: AdvancedFeaturesProps) => {
@@ -38,14 +37,6 @@ export const AdvancedFeatures = ({ activeFeature, onFeatureChange }: AdvancedFea
       icon: Shield,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50'
-    },
-    {
-      id: 'techstack' as const,
-      name: 'Technology Stack Flowchart',
-      description: 'Interactive visualization of the complete technology architecture',
-      icon: Network,
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-50'
     }
   ];
 
@@ -57,8 +48,6 @@ export const AdvancedFeatures = ({ activeFeature, onFeatureChange }: AdvancedFea
         return <FinancialHealthReport />;
       case 'privacy':
         return <PrivacyEncryption />;
-      case 'techstack':
-        return <TechStackFlowchart />;
       default:
         return <EmailReceiptLinker />;
     }
@@ -74,7 +63,7 @@ export const AdvancedFeatures = ({ activeFeature, onFeatureChange }: AdvancedFea
           </div>
 
           {/* Feature Selection */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
             {features.map((feature) => {
               const Icon = feature.icon;
               const isActive = activeFeature === feature.id;
@@ -94,7 +83,6 @@ export const AdvancedFeatures = ({ activeFeature, onFeatureChange }: AdvancedFea
                     <p className="text-gray-600 text-sm">{feature.description}</p>
                     {isActive && (
                       <div className="mt-4 flex items-center text-blue-600">
-                        <Zap className="w-4 h-4 mr-1" />
                         <span className="text-sm font-medium">Active</span>
                       </div>
                     )}
