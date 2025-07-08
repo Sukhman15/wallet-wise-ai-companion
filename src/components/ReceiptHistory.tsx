@@ -1,12 +1,14 @@
 
 import { useState } from 'react';
-import { Receipt, ShoppingCart, Coffee, Car, Filter } from 'lucide-react';
+import { Receipt, ShoppingCart, Coffee, Car, Filter, Calculator } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { TaxReadyExport } from './TaxReadyExport';
 
 export const ReceiptHistory = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showTaxExport, setShowTaxExport] = useState(false);
 
   const categories = ['All', 'Groceries', 'Dining', 'Transportation'];
   
@@ -60,6 +62,10 @@ export const ReceiptHistory = () => {
     ? receipts 
     : receipts.filter(receipt => receipt.category.includes(selectedCategory));
 
+  if (showTaxExport) {
+    return <TaxReadyExport />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="p-6 max-w-6xl mx-auto">
@@ -71,32 +77,42 @@ export const ReceiptHistory = () => {
         {/* Category Filter with Premium Design */}
         <Card className="mb-8 bg-white/80 backdrop-blur-sm border-0 shadow-xl">
           <CardContent className="p-6">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center">
-                  <Filter className="w-5 h-5 text-white" />
+            <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
+              <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center">
+                    <Filter className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-lg font-semibold text-gray-700">Filter by Category</span>
                 </div>
-                <span className="text-lg font-semibold text-gray-700">Filter by Category</span>
+                <div className="flex space-x-3">
+                  {categories.map((category) => (
+                    <Button
+                      key={category}
+                      variant={selectedCategory === category ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedCategory(category)}
+                      className={`
+                        transition-all duration-300 rounded-full px-6 py-2
+                        ${selectedCategory === category 
+                          ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg" 
+                          : "hover:bg-blue-50 border-blue-200"
+                        }
+                      `}
+                    >
+                      {category}
+                    </Button>
+                  ))}
+                </div>
               </div>
-              <div className="flex space-x-3">
-                {categories.map((category) => (
-                  <Button
-                    key={category}
-                    variant={selectedCategory === category ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCategory(category)}
-                    className={`
-                      transition-all duration-300 rounded-full px-6 py-2
-                      ${selectedCategory === category 
-                        ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg" 
-                        : "hover:bg-blue-50 border-blue-200"
-                      }
-                    `}
-                  >
-                    {category}
-                  </Button>
-                ))}
-              </div>
+              
+              <Button
+                onClick={() => setShowTaxExport(true)}
+                className="bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 shadow-lg"
+              >
+                <Calculator className="w-4 h-4 mr-2" />
+                Tax Export
+              </Button>
             </div>
           </CardContent>
         </Card>
