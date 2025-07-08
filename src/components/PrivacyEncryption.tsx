@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Shield, Lock, Eye, EyeOff, Key, Database } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -69,7 +70,7 @@ export const PrivacyEncryption = () => {
                 <div className="space-y-1">
                   <p className="text-sm font-medium">Encryption Status:</p>
                   {encryptionStatus.isEncrypted ? (
-                    <Badge variant="success">Encrypted</Badge>
+                    <Badge variant="secondary">Encrypted</Badge>
                   ) : (
                     <Badge variant="destructive">Not Encrypted</Badge>
                   )}
