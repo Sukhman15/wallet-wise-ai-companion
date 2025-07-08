@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Home, Camera, MessageCircle, Wallet, History, Menu, X, FileText } from 'lucide-react';
+import { Home, Camera, MessageCircle, Wallet, History, Menu, X, FileText, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface LayoutProps {
@@ -23,6 +23,7 @@ export const Layout = ({
     { name: 'Wallet', icon: Wallet, id: 'wallet', color: 'text-yellow-600' },
     { name: 'History', icon: History, id: 'history', color: 'text-blue-600' },
     { name: 'Tax Export', icon: FileText, id: 'tax-export', color: 'text-purple-600' },
+    { name: 'Advanced', icon: Settings, id: 'advanced', color: 'text-gray-600' },
   ];
 
   return (

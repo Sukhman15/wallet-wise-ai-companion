@@ -1,21 +1,92 @@
-
-import { useState } from 'react';
-import { Send, MessageCircle, Globe, Zap } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Send, MessageCircle, Globe, Zap, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export const AIChatbot = () => {
   const [messages, setMessages] = useState([
     {
       type: 'bot',
-      content: 'Hello! I\'m your AI spending assistant. Ask me about your expenses, receipts, or savings opportunities in any language!',
+      content: 'Hello! I\'m your AI spending assistant with voice capabilities. Ask me about your expenses, receipts, or savings opportunities in any language!',
       timestamp: new Date()
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
+  const [speechSupported, setSpeechSupported] = useState(false);
+  
+  const recognitionRef = useRef<any>(null);
+  const synthRef = useRef<any>(null);
+
+  // Check for speech recognition support
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      setSpeechSupported(true);
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = selectedLanguage === 'hi' ? 'hi-IN' : 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInputValue(transcript);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+
+    // Check for speech synthesis support
+    if ('speechSynthesis' in window) {
+      synthRef.current = window.speechSynthesis;
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [selectedLanguage]);
+
+  const startListening = () => {
+    if (recognitionRef.current && speechSupported) {
+      setIsListening(true);
+      recognitionRef.current.start();
+    }
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+  };
+
+  const speakText = (text: string) => {
+    if (synthRef.current && isVoiceEnabled) {
+      // Cancel any ongoing speech
+      synthRef.current.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = selectedLanguage === 'hi' ? 'hi-IN' : 'en-US';
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      
+      synthRef.current.speak(utterance);
+    }
+  };
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -156,8 +227,8 @@ export const AIChatbot = () => {
 
   const getWelcomeMessage = (langCode: string) => {
     const welcomes = {
-      en: "Hello! I'm your AI spending assistant. Ask me about your expenses, receipts, or savings opportunities in any language!",
-      hi: "नमस्ते! मैं आपका AI खर्च सहायक हूं। मुझसे अपने खर्च, रसीदों या बचत के अवसरों के बारे में किसी भी भाषा में पूछें!",
+      en: "Hello! I'm your AI spending assistant with voice capabilities. Ask me about your expenses, receipts, or savings opportunities in any language!",
+      hi: "नमस्ते! मैं आपका AI खर्च सहायक हूं जिसमें आवाज की सुविधा है। मुझसे अपने खर्च, रसीदों या बचत के अवसरों के बारे में किसी भी भाषा में पूछें!",
       te: "హలో! నేను మీ AI వ్యయ సహాయకుడిని. మీ ఖర్చులు, రసీదులు లేదా పొదుపు అవకాశాల గురించి ఏ భాషలోనైనా నన్ను అడగండి!",
       ta: "வணக்கம்! நான் உங்கள் AI செலவு உதவியாளர். உங்கள் செலவுகள், ரசீதுகள் அல்லது சேமிப்பு வாய்ப்புகள் பற்றி எந்த மொழியிலும் என்னிடம் கேளுங்கள்!",
       bn: "হ্যালো! আমি আপনার AI খরচের সহায়ক। আপনার খরচ, রসিদ বা সঞ্চয়ের সুযোগ সম্পর্কে যেকোনো ভাষায় আমাকে জিজ্ঞাসা করুন!",
@@ -182,7 +253,6 @@ export const AIChatbot = () => {
     // Simulate AI processing delay
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // Mock responses based on question content and language
     let response = "";
     const lowerQuestion = question.toLowerCase();
     
@@ -201,7 +271,7 @@ export const AIChatbot = () => {
         ur: "آپ کی رسیدوں کی بنیاد پر، آپ نے اس مہینے کریانے کے سامان پر ₹28,745 خرچ کیے ہیں۔ یہ پچھلے مہینے سے 12% زیادہ ہے۔"
       };
       response = responses[selectedLanguage] || responses.en;
-    } else if (lowerQuestion.includes('coffee') || lowerQuestion.includes('कॉफी') || lowerQuestion.includes('કોફી') || lowerQuestion.includes('কফি') || lowerQuestion.includes('കോഫി') || lowerQuestion.includes('কাহি') || lowerQuestion.includes('કોફી')) {
+    } else if (lowerQuestion.includes('coffee') || lowerQuestion.includes('कॉफी') || lowerQuestion.includes('કોફી') || lowerQuestion.includes('কফি') || lowerQuestion.includes('കോഫി') || lowerQuestion.includes('कাহি') || lowerQuestion.includes('કોફી')) {
       const responses = {
         en: "You've spent ₹4,700 on coffee this month. Try brewing at home to save ₹3,500/month! I can create a savings goal pass for your wallet.",
         hi: "आपने इस महीने कॉफी पर ₹4,700 खर्च किए हैं। घर पर बनाने की कोशिश करें और ₹3,500/महीना बचाएं!",
@@ -233,11 +303,18 @@ export const AIChatbot = () => {
       response = responses[selectedLanguage] || responses.en;
     }
 
-    setMessages(prev => [...prev, {
+    const botMessage = {
       type: 'bot',
       content: response,
       timestamp: new Date()
-    }]);
+    };
+
+    setMessages(prev => [...prev, botMessage]);
+    
+    // Speak the response if voice is enabled
+    if (isVoiceEnabled) {
+      speakText(response);
+    }
     
     setIsLoading(false);
   };
@@ -264,6 +341,10 @@ export const AIChatbot = () => {
 
   const handleLanguageChange = (langCode: string) => {
     setSelectedLanguage(langCode);
+    // Update recognition language
+    if (recognitionRef.current) {
+      recognitionRef.current.lang = langCode === 'hi' ? 'hi-IN' : 'en-US';
+    }
     // Update welcome message
     setMessages([{
       type: 'bot',
@@ -275,16 +356,60 @@ export const AIChatbot = () => {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">AI Assistant</h1>
-        <p className="text-gray-600">Ask questions about your spending and get insights</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">AI Voice Assistant</h1>
+        <p className="text-gray-600">Ask questions about your spending and get insights with voice support</p>
       </div>
+
+      {/* Voice Controls */}
+      {speechSupported && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center text-lg">
+              <Mic className="w-5 h-5 mr-2 text-green-600" />
+              Voice Assistant Controls
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-4">
+              <Button
+                onClick={isVoiceEnabled ? () => setIsVoiceEnabled(false) : () => setIsVoiceEnabled(true)}
+                variant={isVoiceEnabled ? "default" : "outline"}
+                size="sm"
+              >
+                {isVoiceEnabled ? (
+                  <>
+                    <Volume2 className="w-4 h-4 mr-2" />
+                    Voice On
+                  </>
+                ) : (
+                  <>
+                    <VolumeX className="w-4 h-4 mr-2" />
+                    Voice Off
+                  </>
+                )}
+              </Button>
+              <div className="text-sm text-gray-600">
+                Voice responses: {isVoiceEnabled ? 'Enabled' : 'Disabled'}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {!speechSupported && (
+        <Alert className="mb-6">
+          <AlertDescription>
+            Voice features are not supported in your browser. Please use a modern browser like Chrome or Firefox for voice capabilities.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Language Selector */}
       <Card className="mb-6">
         <CardHeader>
           <CardTitle className="flex items-center text-lg">
             <Globe className="w-5 h-5 mr-2 text-blue-600" />
-            Language / भाषा / ভাষা / ભાષા / ಭಾಷೆ / തकावळ / ਭਾਸ਼ਾ / زبان
+            Language / भाषा / ভাষা / ભાષા / ಭಾಷೆ / മലയാളം / ਭਾਸ਼ਾ / زبان
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -349,10 +474,20 @@ export const AIChatbot = () => {
                 <Input
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Ask about your spending..."
+                  placeholder="Ask about your spending or use voice..."
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   className="flex-1"
                 />
+                {speechSupported && (
+                  <Button
+                    onClick={isListening ? stopListening : startListening}
+                    variant={isListening ? "destructive" : "outline"}
+                    size="icon"
+                    disabled={isLoading}
+                  >
+                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  </Button>
+                )}
                 <Button 
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isLoading}
