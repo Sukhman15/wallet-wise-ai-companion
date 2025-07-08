@@ -1,4 +1,3 @@
-
 import { TrendingUp, DollarSign, Receipt, CreditCard, Camera } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -103,6 +102,14 @@ export const HomeDashboard = ({ onPageChange, recentReceipts = [] }: HomeDashboa
                 size="lg"
               >
                 AI Assistant
+              </Button>
+              <Button 
+                onClick={() => onPageChange('advanced')}
+                variant="outline" 
+                className="border-white/20 bg-white/5 backdrop-blur-sm text-white hover:bg-white/10 transition-all duration-300"
+                size="lg"
+              >
+                Advanced Features
               </Button>
             </div>
           </div>
