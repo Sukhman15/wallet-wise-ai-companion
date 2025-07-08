@@ -8,14 +8,13 @@ import { WalletPassPreview } from '@/components/WalletPassPreview';
 import { AIChatbot } from '@/components/AIChatbot';
 import { WalletPasses } from '@/components/WalletPasses';
 import { ReceiptHistory } from '@/components/ReceiptHistory';
-import { AdvancedFeatures } from '@/components/AdvancedFeatures';
+import { TaxReadyExport } from '@/components/TaxReadyExport';
 
 const Index = () => {
   const [currentPage, setCurrentPage] = useState('home');
   const [currentStep, setCurrentStep] = useState<'upload' | 'analysis' | 'pass'>('upload');
   const [receiptData, setReceiptData] = useState(null);
   const [scannedReceipts, setScannedReceipts] = useState<any[]>([]);
-  const [activeAdvancedFeature, setActiveAdvancedFeature] = useState<'refill' | 'email' | 'reports' | 'privacy'>('refill');
 
   const handleReceiptAnalyzed = (data: any) => {
     setReceiptData(data);
@@ -62,8 +61,8 @@ const Index = () => {
       case 'history':
         return <ReceiptHistory />;
 
-      case 'advanced':
-        return <AdvancedFeatures activeFeature={activeAdvancedFeature} />;
+      case 'tax-export':
+        return <TaxReadyExport />;
       
       default:
         return <HomeDashboard onPageChange={setCurrentPage} recentReceipts={scannedReceipts} />;
@@ -74,8 +73,6 @@ const Index = () => {
     <Layout 
       currentPage={currentPage} 
       onPageChange={setCurrentPage}
-      onAdvancedFeatureChange={setActiveAdvancedFeature}
-      activeAdvancedFeature={activeAdvancedFeature}
     >
       {renderPageContent()}
     </Layout>

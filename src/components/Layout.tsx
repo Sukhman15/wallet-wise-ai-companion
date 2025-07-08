@@ -1,22 +1,18 @@
 
 import { useState } from 'react';
-import { Home, Camera, MessageCircle, Wallet, History, Menu, X, Settings } from 'lucide-react';
+import { Home, Camera, MessageCircle, Wallet, History, Menu, X, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface LayoutProps {
   children: React.ReactNode;
   currentPage: string;
   onPageChange: (page: string) => void;
-  onAdvancedFeatureChange?: (feature: 'refill' | 'email' | 'reports' | 'privacy') => void;
-  activeAdvancedFeature?: 'refill' | 'email' | 'reports' | 'privacy';
 }
 
 export const Layout = ({ 
   children, 
   currentPage, 
-  onPageChange, 
-  onAdvancedFeatureChange,
-  activeAdvancedFeature 
+  onPageChange
 }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -26,14 +22,7 @@ export const Layout = ({
     { name: 'AI Chat', icon: MessageCircle, id: 'chat', color: 'text-red-600' },
     { name: 'Wallet', icon: Wallet, id: 'wallet', color: 'text-yellow-600' },
     { name: 'History', icon: History, id: 'history', color: 'text-blue-600' },
-    { name: 'Advanced', icon: Settings, id: 'advanced', color: 'text-purple-600' },
-  ];
-
-  const advancedFeatures = [
-    { name: 'Auto-Refill', id: 'refill' as const },
-    { name: 'Email Link', id: 'email' as const },
-    { name: 'Reports', id: 'reports' as const },
-    { name: 'Privacy', id: 'privacy' as const },
+    { name: 'Tax Export', icon: FileText, id: 'tax-export', color: 'text-purple-600' },
   ];
 
   return (
@@ -97,30 +86,6 @@ export const Layout = ({
                 );
               })}
             </div>
-
-            {/* Advanced Features Submenu */}
-            {currentPage === 'advanced' && onAdvancedFeatureChange && (
-              <div className="mt-4 pl-4 border-l-2 border-gray-200">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Advanced Features</p>
-                <div className="space-y-1">
-                  {advancedFeatures.map((feature) => (
-                    <button
-                      key={feature.id}
-                      onClick={() => onAdvancedFeatureChange(feature.id)}
-                      className={`
-                        w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
-                        ${activeAdvancedFeature === feature.id
-                          ? 'bg-purple-50 text-purple-700'
-                          : 'text-gray-600 hover:bg-gray-100'
-                        }
-                      `}
-                    >
-                      {feature.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </nav>
         </div>
 
