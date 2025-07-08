@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { HomeDashboard } from '@/components/HomeDashboard';
@@ -16,7 +15,7 @@ const Index = () => {
   const [currentStep, setCurrentStep] = useState<'upload' | 'analysis' | 'pass'>('upload');
   const [receiptData, setReceiptData] = useState(null);
   const [scannedReceipts, setScannedReceipts] = useState<any[]>([]);
-  const [activeAdvancedFeature, setActiveAdvancedFeature] = useState<'email' | 'reports' | 'privacy'>('email');
+  const [activeAdvancedFeature, setActiveAdvancedFeature] = useState<'email' | 'reports' | 'privacy' | 'techstack'>('email');
 
   const handleReceiptAnalyzed = (data: any) => {
     setReceiptData(data);
